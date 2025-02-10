@@ -13,7 +13,7 @@ class Game:
         self.screen = pygame.display.set_mode((800, 800))
         pygame.display.set_caption("Pygame")
 
-        tmx_data = pytmx.util_pygame.load_pygame('pokemonn.tmx')
+        tmx_data = pytmx.util_pygame.load_pygame('Tileset/pokemonn.tmx')
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
         map_layer.zoom=1
