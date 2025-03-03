@@ -55,6 +55,8 @@ class Game:
 
     def run(self):
         clock = pygame.time.Clock()
+        for wall in self.walls:
+            pygame.draw.rect(self.screen, (255, 0, 0), wall, 2)
 
         running = True
 
