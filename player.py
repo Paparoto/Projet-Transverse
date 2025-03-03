@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
             'right':self.get_image(0, 64),
             'up':self.get_image(0, 96),
         }
-        self.feet = pygame.Rect(0, 0, self.rect.width * 0.5, 12)
+        self.feet = pygame.Rect(0, 0, self.rect.width * 0.5, 15)
         self.old_position = self.position.copy()
         self.speed = 2
 
