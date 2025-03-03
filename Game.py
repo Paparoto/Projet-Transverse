@@ -13,7 +13,7 @@ class Game:
         self.screen = pygame.display.set_mode((800, 800))
         pygame.display.set_caption("Pygame")
 
-        tmx_data = pytmx.util_pygame.load_pygame('Tileset/pokemonn.tmx')
+        tmx_data = pytmx.util_pygame.load_pygame('Tileset/horror.tmx')
         map_data = pyscroll.data.TiledMapData(tmx_data)
         map_layer = pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
         map_layer.zoom=2
@@ -24,7 +24,7 @@ class Game:
         self.walls = []
 
         for obj in tmx_data.objects:
-            if obj.type == "col":
+            if obj.type == "collision":
                 self.walls.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
 
         self.group = pyscroll.PyscrollGroup(map_layer=map_layer, default_layer=3)
@@ -45,11 +45,14 @@ class Game:
         elif pressed[pygame.K_LEFT]:
            self.player.move_left()
            self.player.change_animation('left')
+
     def update(self):
         self.group.update()
+
         for sprite in self.group.sprites():
-            if sprite.feet.colliderect(self.walls)>-1:
+            if sprite.feet.collidelist(self.walls) > -1:
                 sprite.move_back()
+
     def run(self):
         clock = pygame.time.Clock()
 
