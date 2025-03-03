@@ -9,6 +9,24 @@ c̴̠̼̖̺̣͔̉͆̏ͅ ̷̥͎̼̭̱̤̈̈́̓͊̒́̆͜͜ͅv̷̡͕̲̜͎̌̑͘f̶
 - Fin alternative:
   Suicide, fausse bonne fin (idée de l'avion), antidote
 
+
+MINI JEUX:
+-PONG 
+-Jeux vidéo ou fusée décolle et esquivait les asteroides qui nous foncent dessus 
+-super mario
+-fire and water 
+-angry birds
+-temple run 
+-street fighter
+-jetpack joyride
+-Undertale 
+-fruit ninja
+subway surfers
+-geometry dash 
+-tetris 
+color switch ?
+-tomb of the mask 
+-candy crush ??
                                                                                           Monster
 
 ![image](https://github.com/user-attachments/assets/8ba7ae00-84b4-44b9-887c-30bfbd539a97)
