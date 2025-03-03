@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.position=[x,y]
         self.speed = 2
-
+a
 
     def move_right(self): self.position[0] += self.speed
 
