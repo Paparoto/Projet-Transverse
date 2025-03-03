@@ -48,7 +48,7 @@ class Game:
     def update(self):
         self.group.update()
         for sprite in self.group.sprites():
-            if sprite.feet.colliderect(self.walls)>-1:
+            if sprite.feet.collidelist(self.walls) > -1:
                 sprite.move_back()
     def run(self):
         clock = pygame.time.Clock()
