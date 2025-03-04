@@ -14,7 +14,7 @@ def main_menu():
     background_image = pygame.transform.scale(background_image, (1920, 1080))
 
     pygame.mixer.music.load("Tileset/Lavanville_Musique_trimmed.mp3")
-    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.set_volume(0.1)
     pygame.mixer.music.play(-1)
 
     title_text = font.render("DESTRUCTION", True, (255, 255, 255))
