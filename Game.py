@@ -26,7 +26,7 @@ class Game:
 
     def handle_input(self):
         pressed = pygame.key.get_pressed()
-
+#A
         self.player.save_location()
 
         if pressed[pygame.K_UP]:
