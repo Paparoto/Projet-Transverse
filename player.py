@@ -26,9 +26,8 @@ class Player(pygame.sprite.Sprite):
 
     def save_location(self):
         if isinstance(self.position, tuple):
-            self.old_position = list(self.position)
-        else:
-            self.old_position = self.position.copy()
+            self.position = list(self.position)
+        self.old_position = self.position.copy()
 
     def change_animation(self, direction):
         self.direction = direction
