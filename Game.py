@@ -1,7 +1,9 @@
 import pygame
 import pytmx
 import pyscroll
+from game_utils import display_screamer
 from player import Player
+from menu import options_menu  # Importer la fonction options_menu
 
 class Game:
     def __init__(self):
@@ -63,19 +65,9 @@ class Game:
         else:
             self.is_second_map = False
 
-    def update(self):
-        self.player.update()
-
-        if self.enter_house_rect.colliderect(self.player.feet):
-            self.switch_house("couloir")
-
-        if self.player.feet.collidelist(self.walls) > -1:
-            self.player.move_back()
-
-        if self.is_second_map:
-            self.center_camera()
-
-        self.group.center(self.player.rect.center)
+        # Importing display_screamer only when it's needed
+        if new_map == "couloir":
+            running = display_screamer(self.screen)
 
     def center_camera(self):
         camera_width, camera_height = self.screen.get_size()
@@ -92,22 +84,49 @@ class Game:
 
         self.map_layer.camera = pygame.Rect(camera_x, camera_y, camera_width, camera_height)
 
+    def update(self):
+        self.player.update()
+
+        if self.enter_house_rect.colliderect(self.player.feet):
+            self.switch_house("couloir")
+
+        if self.player.feet.collidelist(self.walls) > -1:
+            self.player.move_back()
+
+        if self.is_second_map:
+            self.center_camera()
+
+        self.group.center(self.player.rect.center)
+
     def run(self):
         clock = pygame.time.Clock()
         running = True
+        in_options_menu = False  # Variable pour savoir si nous sommes dans le menu des options
 
         while running:
-            self.handle_input()
-            self.update()
+            if in_options_menu:
+                # Afficher le menu des options
+                options_menu(self.screen)
+                in_options_menu = False  # Revenir au jeu après avoir quitté le menu des options
+            else:
+                self.handle_input()
+                self.update()
 
-            self.screen.fill((0, 0, 0))
-            self.group.draw(self.screen)
-            pygame.display.flip()
+                self.screen.fill((0, 0, 0))
+                self.group.draw(self.screen)
+                pygame.display.flip()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    in_options_menu = True  # Afficher le menu des options si Échap est pressé
 
             clock.tick(60)
 
         pygame.quit()
+
+# Run the game
+if __name__ == "__main__":
+    game = Game()
+    game.run()
