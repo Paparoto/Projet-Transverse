@@ -3,7 +3,7 @@ import pytmx
 import pyscroll
 from game_utils import display_screamer
 from player import Player
-from menu import options_menu  # Importer la fonction options_menu
+from menu import options_menu
 
 class Game:
     def __init__(self):
