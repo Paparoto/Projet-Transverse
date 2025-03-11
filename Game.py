@@ -65,7 +65,6 @@ class Game:
         else:
             self.is_second_map = False
 
-        # Importing display_screamer only when it's needed
         if new_map == "couloir":
             running = display_screamer(self.screen)
 

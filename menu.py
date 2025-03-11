@@ -1,16 +1,12 @@
 import pygame
 import sys
 import os
-import random  # Pour ajouter de l'aléatoire au screamer
+from Game import Game
 
-
-# Fonction pour sauvegarder le volume dans un fichier
 def save_settings(volume):
     with open("settings.txt", "w") as file:
         file.write(f"volume={volume}\n")
 
-
-# Fonction pour charger le volume depuis un fichier
 def load_settings():
     if os.path.exists("settings.txt"):
         with open("settings.txt", "r") as file:
