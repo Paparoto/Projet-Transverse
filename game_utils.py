@@ -2,6 +2,7 @@ import pygame
 import sys
 import os
 
+
 def display_screamer(screen):
     screamer_image = pygame.image.load("Tileset/hq720.jpg")
     screamer_sound = pygame.mixer.Sound("Tileset/Jumpscare-Sound-Trimmed-Final.wav")
@@ -24,10 +25,12 @@ def options_menu(screen):
     back_text = font.render("BACK", True, (255, 255, 255))
     save_text = font.render("SAVE", True, (255, 255, 255))
     resolution_text = font.render("RESOLUTION", True, (255, 255, 255))
+    quit_text = font.render("QUIT", True, (255, 255, 255))
 
     back_rect = pygame.Rect(860, 800, 200, 80)
     save_rect = pygame.Rect(860, 650, 200, 80)
     resolution_rect = pygame.Rect(860, 500, 200, 80)
+    quit_rect = pygame.Rect(860, 350, 200, 80)
 
     volume = load_settings()
     pygame.mixer.music.set_volume(volume)
@@ -40,17 +43,21 @@ def options_menu(screen):
         options_title = font.render("OPTIONS", True, (255, 255, 255))
         screen.blit(options_title, (850, 100))
 
-        color = (100, 100, 100) if back_rect.collidepoint(mouse_pos) else (50, 50, 50)
-        pygame.draw.rect(screen, color, back_rect, border_radius=10)
-        back_text_rect = back_text.get_rect(center=back_rect.center)
-        screen.blit(back_text, back_text_rect)
+        buttons = [(back_rect, back_text), (save_rect, save_text), (resolution_rect, resolution_text),
+                   (quit_rect, quit_text)]
+
+        for rect, text in buttons:
+            color = (100, 100, 100) if rect.collidepoint(mouse_pos) else (50, 50, 50)
+            pygame.draw.rect(screen, color, rect, border_radius=10)
+            text_rect = text.get_rect(center=rect.center)
+            screen.blit(text, text_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                running = False  # Quitte le menu si Échap est pressé
+                running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if back_rect.collidepoint(event.pos):
                     running = False
@@ -58,9 +65,13 @@ def options_menu(screen):
                     save_settings(volume)
                 elif resolution_rect.collidepoint(event.pos):
                     running = display_screamer(screen)
+                elif quit_rect.collidepoint(event.pos):
+                    pygame.quit()
+                    sys.exit()
 
         pygame.display.flip()
         clock.tick(60)
+
 
 # Fonction pour sauvegarder le volume dans un fichier
 def save_settings(volume):
