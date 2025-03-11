@@ -2,11 +2,9 @@ import pygame
 import sys
 import os
 
-
 def save_settings(volume):
     with open("settings.txt", "w") as file:
         file.write(f"volume={volume}\n")
-
 
 def load_settings():
     if os.path.exists("settings.txt"):
@@ -15,7 +13,6 @@ def load_settings():
                 if line.startswith("volume="):
                     return float(line.strip().split("=")[1])
     return 0.5
-
 
 def options_menu(screen):
     font = pygame.font.Font(None, 60)
@@ -35,42 +32,34 @@ def options_menu(screen):
         screen.fill((30, 30, 30))
         mouse_pos = pygame.mouse.get_pos()
 
-        # Titre
         options_title = font.render("OPTIONS", True, (255, 255, 255))
         screen.blit(options_title, (850, 100))
 
-        # Affichage du texte du volume centré
         volume_text = font.render(f"VOLUME: {int(volume * 100)}%", True, (255, 255, 255))
         volume_rect = volume_text.get_rect(center=(960, 300))
         screen.blit(volume_text, volume_rect)
 
-        # Position de base des flèches (80 pixels de chaque côté du texte)
         left_arrow_pos = (volume_rect.left - 80, volume_rect.centery)
         right_arrow_pos = (volume_rect.right + 80, volume_rect.centery)
 
-        # Couleur par défaut des flèches
         left_arrow_color = (255, 255, 255)
         right_arrow_color = (255, 255, 255)
 
-        # Création des surfaces et rectangles pour les flèches
         left_arrow_surface = font.render("<", True, left_arrow_color)
         right_arrow_surface = font.render(">", True, right_arrow_color)
         left_arrow_rect = left_arrow_surface.get_rect(center=left_arrow_pos)
         right_arrow_rect = right_arrow_surface.get_rect(center=right_arrow_pos)
 
-        # Surbrillance en gris lorsque la souris survole les flèches
         if left_arrow_rect.collidepoint(mouse_pos):
             left_arrow_color = (150, 150, 150)
         if right_arrow_rect.collidepoint(mouse_pos):
             right_arrow_color = (150, 150, 150)
 
-        # Recréation des surfaces avec la couleur de surbrillance si besoin
         left_arrow_surface = font.render("<", True, left_arrow_color)
         right_arrow_surface = font.render(">", True, right_arrow_color)
         left_arrow_rect = left_arrow_surface.get_rect(center=left_arrow_pos)
         right_arrow_rect = right_arrow_surface.get_rect(center=right_arrow_pos)
 
-        # Variables pour l'effet de clic (offset)
         left_pressed = False
         right_pressed = False
 
@@ -85,30 +74,26 @@ def options_menu(screen):
                     save_settings(volume)
                 elif left_arrow_rect.collidepoint(event.pos):
                     left_pressed = True
-                    volume = max(0.0, volume - 0.05)
+                    volume = round(max(0.0, volume - 0.05), 2)
                     pygame.mixer.music.set_volume(volume)
                 elif right_arrow_rect.collidepoint(event.pos):
                     right_pressed = True
-                    volume = min(1.0, volume + 0.05)
+                    volume = round(min(1.0, volume + 0.05), 2)
                     pygame.mixer.music.set_volume(volume)
 
-        # Décalage vertical pour simuler l'effet de clic
         if left_pressed:
             left_arrow_rect = left_arrow_rect.move(0, 3)
         if right_pressed:
             right_arrow_rect = right_arrow_rect.move(0, 3)
 
-        # Affichage des flèches
         screen.blit(left_arrow_surface, left_arrow_rect)
         screen.blit(right_arrow_surface, right_arrow_rect)
 
-        # Bouton BACK
         back_color = (100, 100, 100) if back_rect.collidepoint(mouse_pos) else (50, 50, 50)
         pygame.draw.rect(screen, back_color, back_rect, border_radius=10)
         back_text_rect = back_text.get_rect(center=back_rect.center)
         screen.blit(back_text, back_text_rect)
 
-        # Bouton SAVE
         save_color = (100, 100, 100) if save_rect.collidepoint(mouse_pos) else (50, 50, 50)
         pygame.draw.rect(screen, save_color, save_rect, border_radius=10)
         save_text_rect = save_text.get_rect(center=save_rect.center)
@@ -116,7 +101,6 @@ def options_menu(screen):
 
         pygame.display.flip()
         clock.tick(60)
-
 
 def main_menu():
     pygame.init()
@@ -147,7 +131,6 @@ def main_menu():
     while running:
         screen.blit(background_image, (0, 0))
         screen.blit(title_text, title_rect)
-
         mouse_pos = pygame.mouse.get_pos()
 
         for rect, text in [(play_rect, play_text), (options_rect, options_text), (quit_rect, quit_text)]:

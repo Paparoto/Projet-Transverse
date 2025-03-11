@@ -2,7 +2,6 @@ import pygame
 import sys
 import os
 
-
 def display_screamer(screen):
     screamer_image = pygame.image.load("Tileset/hq720.jpg")
     screamer_sound = pygame.mixer.Sound("Tileset/Jumpscare-Sound-Trimmed-Final.wav")
@@ -14,9 +13,19 @@ def display_screamer(screen):
     pygame.display.flip()
 
     pygame.time.delay(2000)
-
     return False
 
+def save_settings(volume):
+    with open("settings.txt", "w") as file:
+        file.write(f"volume={volume}\n")
+
+def load_settings():
+    if os.path.exists("settings.txt"):
+        with open("settings.txt", "r") as file:
+            for line in file:
+                if line.startswith("volume="):
+                    return float(line.strip().split("=")[1])
+    return 0.5
 
 def options_menu(screen):
     font = pygame.font.Font(None, 60)
@@ -24,13 +33,11 @@ def options_menu(screen):
 
     back_text = font.render("BACK", True, (255, 255, 255))
     save_text = font.render("SAVE", True, (255, 255, 255))
-    resolution_text = font.render("RESOLUTION", True, (255, 255, 255))
     quit_text = font.render("QUIT", True, (255, 255, 255))
 
     back_rect = pygame.Rect(860, 800, 200, 80)
     save_rect = pygame.Rect(860, 650, 200, 80)
-    resolution_rect = pygame.Rect(860, 500, 200, 80)
-    quit_rect = pygame.Rect(860, 350, 200, 80)
+    quit_rect = pygame.Rect(860, 500, 200, 80)
 
     volume = load_settings()
     pygame.mixer.music.set_volume(volume)
@@ -43,47 +50,55 @@ def options_menu(screen):
         options_title = font.render("OPTIONS", True, (255, 255, 255))
         screen.blit(options_title, (850, 100))
 
-        buttons = [(back_rect, back_text), (save_rect, save_text), (resolution_rect, resolution_text),
-                   (quit_rect, quit_text)]
+        volume_text = font.render(f"VOLUME: {int(volume * 100)}%", True, (255, 255, 255))
+        volume_rect = volume_text.get_rect(center=(960, 300))
+        screen.blit(volume_text, volume_rect)
 
-        for rect, text in buttons:
-            color = (100, 100, 100) if rect.collidepoint(mouse_pos) else (50, 50, 50)
-            pygame.draw.rect(screen, color, rect, border_radius=10)
-            text_rect = text.get_rect(center=rect.center)
-            screen.blit(text, text_rect)
+        left_arrow_pos = (volume_rect.left - 80, volume_rect.centery)
+        right_arrow_pos = (volume_rect.right + 80, volume_rect.centery)
+
+        left_arrow_surface = font.render("<", True, (255, 255, 255))
+        right_arrow_surface = font.render(">", True, (255, 255, 255))
+        left_arrow_rect = left_arrow_surface.get_rect(center=left_arrow_pos)
+        right_arrow_rect = right_arrow_surface.get_rect(center=right_arrow_pos)
+
+        left_pressed = False
+        right_pressed = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if back_rect.collidepoint(event.pos):
                     running = False
                 elif save_rect.collidepoint(event.pos):
                     save_settings(volume)
-                elif resolution_rect.collidepoint(event.pos):
-                    running = display_screamer(screen)
                 elif quit_rect.collidepoint(event.pos):
                     pygame.quit()
                     sys.exit()
+                elif left_arrow_rect.collidepoint(event.pos):
+                    left_pressed = True
+                    volume = max(0.0, volume - 0.05)
+                    pygame.mixer.music.set_volume(volume)
+                elif right_arrow_rect.collidepoint(event.pos):
+                    right_pressed = True
+                    volume = min(1.0, volume + 0.05)
+                    pygame.mixer.music.set_volume(volume)
+
+        if left_pressed:
+            left_arrow_rect = left_arrow_rect.move(0, 3)
+        if right_pressed:
+            right_arrow_rect = right_arrow_rect.move(0, 3)
+
+        screen.blit(left_arrow_surface, left_arrow_rect)
+        screen.blit(right_arrow_surface, right_arrow_rect)
+
+        for rect, text in [(back_rect, back_text), (save_rect, save_text), (quit_rect, quit_text)]:
+            color = (100, 100, 100) if rect.collidepoint(mouse_pos) else (50, 50, 50)
+            pygame.draw.rect(screen, color, rect, border_radius=10)
+            text_rect = text.get_rect(center=rect.center)
+            screen.blit(text, text_rect)
 
         pygame.display.flip()
         clock.tick(60)
-
-
-# Fonction pour sauvegarder le volume dans un fichier
-def save_settings(volume):
-    with open("settings.txt", "w") as file:
-        file.write(f"volume={volume}\n")
-
-
-# Fonction pour charger le volume depuis un fichier
-def load_settings():
-    if os.path.exists("settings.txt"):
-        with open("settings.txt", "r") as file:
-            for line in file:
-                if line.startswith("volume="):
-                    return float(line.strip().split("=")[1])
-    return 0.1  # Valeur par défaut si le fichier n'existe pas

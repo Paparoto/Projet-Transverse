@@ -97,7 +97,7 @@
 </data>
  </layer>
  <objectgroup id="8" name="objects">
-  <object id="4" name="Player" x="67.9167" y="144.75">
+  <object id="4" name="spawn" x="67.9167" y="144.75">
    <point/>
   </object>
   <object id="11" type="collision" x="0.5" y="0" width="239" height="96"/>
@@ -112,7 +112,6 @@
   <object id="24" type="collision" x="177" y="180.5" width="30.5" height="26"/>
   <object id="54" type="collision" x="183" y="89.5" width="18" height="23.5"/>
   <object id="55" type="collision" x="32" y="208.333" width="31" height="31.3333"/>
-  <object id="59" type="collision" x="64.6667" y="224" width="31" height="16"/>
-  <object id="58" name="exit_room" x="64.3333" y="216" width="30.6667" height="25.3333"/>
+  <object id="58" name="exit_room" type="collision" x="64.3333" y="213.201" width="30.6667" height="25.3333"/>
  </objectgroup>
 </map>
