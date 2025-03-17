@@ -3,7 +3,7 @@ import sys
 import os
 
 def display_screamer(screen):
-    screamer_image = pygame.image.load("Tileset/hq720.jpg")
+    screamer_image = pygame.image.load("Tileset/screamer.jpg")
     screamer_sound = pygame.mixer.Sound("Tileset/Jumpscare-Sound-Trimmed-Final.wav")
     screamer_sound.play()
 
@@ -28,6 +28,7 @@ def load_settings():
     return 0.5
 
 def options_menu(screen):
+    pygame.font.init()
     font = pygame.font.Font(None, 60)
     clock = pygame.time.Clock()
 
@@ -42,7 +43,10 @@ def options_menu(screen):
     volume = load_settings()
     pygame.mixer.music.set_volume(volume)
 
+    show_save_message = False
+    save_message_alpha = 255
     running = True
+
     while running:
         screen.fill((30, 30, 30))
         mouse_pos = pygame.mouse.get_pos()
@@ -62,9 +66,6 @@ def options_menu(screen):
         left_arrow_rect = left_arrow_surface.get_rect(center=left_arrow_pos)
         right_arrow_rect = right_arrow_surface.get_rect(center=right_arrow_pos)
 
-        left_pressed = False
-        right_pressed = False
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -74,22 +75,17 @@ def options_menu(screen):
                     running = False
                 elif save_rect.collidepoint(event.pos):
                     save_settings(volume)
+                    show_save_message = True
+                    save_message_alpha = 255
                 elif quit_rect.collidepoint(event.pos):
                     pygame.quit()
                     sys.exit()
                 elif left_arrow_rect.collidepoint(event.pos):
-                    left_pressed = True
                     volume = max(0.0, volume - 0.05)
                     pygame.mixer.music.set_volume(volume)
                 elif right_arrow_rect.collidepoint(event.pos):
-                    right_pressed = True
                     volume = min(1.0, volume + 0.05)
                     pygame.mixer.music.set_volume(volume)
-
-        if left_pressed:
-            left_arrow_rect = left_arrow_rect.move(0, 3)
-        if right_pressed:
-            right_arrow_rect = right_arrow_rect.move(0, 3)
 
         screen.blit(left_arrow_surface, left_arrow_rect)
         screen.blit(right_arrow_surface, right_arrow_rect)
@@ -99,6 +95,15 @@ def options_menu(screen):
             pygame.draw.rect(screen, color, rect, border_radius=10)
             text_rect = text.get_rect(center=rect.center)
             screen.blit(text, text_rect)
+
+        if show_save_message:
+            save_message_surface = font.render("SETTING SAVE", True, (255, 255, 255))
+            save_message_surface.set_alpha(save_message_alpha)
+            save_message_rect = save_message_surface.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+            screen.blit(save_message_surface, save_message_rect)
+            save_message_alpha -= 5
+            if save_message_alpha <= 0:
+                show_save_message = False
 
         pygame.display.flip()
         clock.tick(60)

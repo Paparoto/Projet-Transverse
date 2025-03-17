@@ -28,6 +28,9 @@ def options_menu(screen):
     pygame.mixer.music.set_volume(volume)
 
     running = True
+    save_message_time = None  # Temps de début de l'affichage du message
+    fade_alpha = 0  # Opacité du message "SETTING SAVE"
+
     while running:
         screen.fill((30, 30, 30))
         mouse_pos = pygame.mouse.get_pos()
@@ -42,21 +45,8 @@ def options_menu(screen):
         left_arrow_pos = (volume_rect.left - 80, volume_rect.centery)
         right_arrow_pos = (volume_rect.right + 80, volume_rect.centery)
 
-        left_arrow_color = (255, 255, 255)
-        right_arrow_color = (255, 255, 255)
-
-        left_arrow_surface = font.render("<", True, left_arrow_color)
-        right_arrow_surface = font.render(">", True, right_arrow_color)
-        left_arrow_rect = left_arrow_surface.get_rect(center=left_arrow_pos)
-        right_arrow_rect = right_arrow_surface.get_rect(center=right_arrow_pos)
-
-        if left_arrow_rect.collidepoint(mouse_pos):
-            left_arrow_color = (150, 150, 150)
-        if right_arrow_rect.collidepoint(mouse_pos):
-            right_arrow_color = (150, 150, 150)
-
-        left_arrow_surface = font.render("<", True, left_arrow_color)
-        right_arrow_surface = font.render(">", True, right_arrow_color)
+        left_arrow_surface = font.render("<", True, (255, 255, 255))
+        right_arrow_surface = font.render(">", True, (255, 255, 255))
         left_arrow_rect = left_arrow_surface.get_rect(center=left_arrow_pos)
         right_arrow_rect = right_arrow_surface.get_rect(center=right_arrow_pos)
 
@@ -72,6 +62,10 @@ def options_menu(screen):
                     running = False
                 elif save_rect.collidepoint(event.pos):
                     save_settings(volume)
+
+                    # Déclencher l'affichage du message "SETTING SAVE"
+                    save_message_time = pygame.time.get_ticks()
+                    fade_alpha = 255  # Opacité maximale au début
                 elif left_arrow_rect.collidepoint(event.pos):
                     left_pressed = True
                     volume = round(max(0.0, volume - 0.05), 2)
@@ -98,6 +92,18 @@ def options_menu(screen):
         pygame.draw.rect(screen, save_color, save_rect, border_radius=10)
         save_text_rect = save_text.get_rect(center=save_rect.center)
         screen.blit(save_text, save_text_rect)
+
+        # Affichage de "SETTING SAVE" avec un effet de fondu
+        if save_message_time is not None:
+            elapsed_time = pygame.time.get_ticks() - save_message_time
+            if elapsed_time < 2000:  # Affiche le message pendant 2 secondes
+                save_message = font.render("SETTING SAVE", True, (255, 255, 255))
+                fade_alpha = max(0, 255 - (255 * elapsed_time // 2000))  # Réduction progressive de l'opacité
+                save_message.set_alpha(fade_alpha)  # Appliquer l'opacité
+                save_message_rect = save_message.get_rect(center=(960, 500))
+                screen.blit(save_message, save_message_rect)
+            else:
+                save_message_time = None  # Supprime le message après 2 secondes
 
         pygame.display.flip()
         clock.tick(60)
