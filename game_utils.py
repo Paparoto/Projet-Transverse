@@ -2,6 +2,7 @@ import pygame
 import sys
 import os
 
+
 def display_screamer(screen):
     screamer_image = pygame.image.load("Tileset/screamer.jpg")
     screamer_sound = pygame.mixer.Sound("Tileset/Jumpscare-Sound-Trimmed-Final.wav")
@@ -15,9 +16,11 @@ def display_screamer(screen):
     pygame.time.delay(2000)
     return False
 
+
 def save_settings(volume):
     with open("settings.txt", "w") as file:
         file.write(f"volume={volume}\n")
+
 
 def load_settings():
     if os.path.exists("settings.txt"):
@@ -27,10 +30,13 @@ def load_settings():
                     return float(line.strip().split("=")[1])
     return 0.5
 
+
 def options_menu(screen):
     pygame.font.init()
     font = pygame.font.Font(None, 60)
     clock = pygame.time.Clock()
+
+    button_sound = pygame.mixer.Sound("Tileset/botton_audio2.wav")
 
     back_text = font.render("BACK", True, (255, 255, 255))
     save_text = font.render("SAVE", True, (255, 255, 255))
@@ -72,19 +78,24 @@ def options_menu(screen):
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if back_rect.collidepoint(event.pos):
+                    button_sound.play()
                     running = False
                 elif save_rect.collidepoint(event.pos):
+                    button_sound.play()
                     save_settings(volume)
                     show_save_message = True
                     save_message_alpha = 255
                 elif quit_rect.collidepoint(event.pos):
+                    button_sound.play()
                     pygame.quit()
                     sys.exit()
                 elif left_arrow_rect.collidepoint(event.pos):
-                    volume = max(0.0, volume - 0.05)
+                    button_sound.play()
+                    volume = round(max(0.0, volume - 0.05), 2)
                     pygame.mixer.music.set_volume(volume)
                 elif right_arrow_rect.collidepoint(event.pos):
-                    volume = min(1.0, volume + 0.05)
+                    button_sound.play()
+                    volume = round(min(1.0, volume + 0.05), 2)
                     pygame.mixer.music.set_volume(volume)
 
         screen.blit(left_arrow_surface, left_arrow_rect)
@@ -99,7 +110,8 @@ def options_menu(screen):
         if show_save_message:
             save_message_surface = font.render("SETTING SAVE", True, (255, 255, 255))
             save_message_surface.set_alpha(save_message_alpha)
-            save_message_rect = save_message_surface.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+            save_message_rect = save_message_surface.get_rect(
+                center=(screen.get_width() // 2, screen.get_height() // 2))
             screen.blit(save_message_surface, save_message_rect)
             save_message_alpha -= 5
             if save_message_alpha <= 0:
