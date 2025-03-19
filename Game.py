@@ -13,7 +13,7 @@ class Game:
         pygame.display.set_caption("Pygame Horror Game")
 
         # Chargement de la première carte
-        self.load_map("horror")
+        self.load_map("couloir")
         self.is_second_map = False
 
     def load_map(self, map_name):
@@ -63,7 +63,7 @@ class Game:
     def switch_house(self, new_map):
         """Change de carte et affiche un screamer si nécessaire."""
         self.load_map(new_map)
-        self.is_second_map = (new_map == "couloir")
+        self.is_second_map = (new_map == "horror")
         if self.is_second_map:
             display_screamer(self.screen)
 

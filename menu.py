@@ -5,7 +5,7 @@ import os
 
 def save_settings(volume):
     with open("settings.txt", "w") as file:
-        file.write(f"volume={volume}\n")
+        file.write(f"volume music={volume}\n")
 
 
 def load_settings():
