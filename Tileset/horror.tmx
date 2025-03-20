@@ -97,7 +97,7 @@
 </data>
  </layer>
  <objectgroup id="8" name="objects">
-  <object id="4" name="spawn" x="159.583" y="135.083">
+  <object id="4" name="spawn" x="150.916" y="125.75">
    <point/>
   </object>
   <object id="11" type="collision" x="0.5" y="0" width="239" height="96"/>
